@@ -1,3 +1,15 @@
 <resources>
-    <string name="app_name">BitcoinPrice</string>
+    <string name="app_name">BitCoinPrice</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="app_widget_description">This is an app widget description</string>
+    <string name="bitcoin_title">Bitcoin /</string>
+    <string name="loading_text">Loading…</string>
+    <string name="str_24h">24h:</string>
+    <string name="description1">Bitcoin logo</string>
+    <string name="description2">Refresh button</string>
+    <string name="iso_code">USD</string>
+    <string name="last4">Bitcoin Average in Last 4 days </string>
+    <string name="fresh_data">Tap to get Fresh Data </string>
+
 </resources>
