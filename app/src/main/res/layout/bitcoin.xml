@@ -1,0 +1,52 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Widget.TestWidget.AppWidget.Container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/transparent"
+    android:id="@+id/llwidget"
+    android:theme="@style/Theme.TestWidget.AppWidgetContainer">
+
+    <ImageView
+        android:id="@+id/bitcoin_icon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="center_vertical"
+        android:layout_toStartOf="@id/appwidget_text"
+        android:layout_centerVertical="true"
+        android:contentDescription="@string/description1"
+        android:src="@drawable/bitcoin_icon" />
+
+    <TextView
+        android:id="@+id/appwidget_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:fontFamily="@font/manrope_bold"
+        android:text="@string/loading_text"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/appwidget_text"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        android:id="@+id/last_update"
+        android:layout_centerVertical="true"
+
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/appwidget_text"
+        android:text="Tap to get Fresh Data"
+        android:textSize="11sp"
+        />
+
+</RelativeLayout>
