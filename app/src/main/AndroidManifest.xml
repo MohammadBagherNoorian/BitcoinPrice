@@ -10,8 +10,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:name=".global.App"
-        android:theme="@style/Theme.BitcoinPrice" >
+        android:theme="@style/Theme.BitcoinPrice"
+        android:name=".base.BaseApplication">
 
         <receiver
             android:name=".view.BitcoinWidget"
