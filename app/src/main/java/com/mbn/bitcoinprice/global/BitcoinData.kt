@@ -61,13 +61,13 @@ class BitcoinData @Inject constructor( val context: Context,val bitcoinDatabase:
             val btcPrice = (1 / thousdandUsd.toDouble()) * 1000
             val btcPricesTwoDecimal = String.format("%.2f", btcPrice)
             result.value = BTCModel(0, btcPricesTwoDecimal).also {
-                bitcoinDatabase.provideDao()?.insertBitcoinPrice(it)
+                bitcoinDatabase.provideDao().insertBitcoinPrice(it)
             }
             setWidgetViewConfig(
                 context, "$btcPricesTwoDecimal$", getTimeByTimeStamp(System.currentTimeMillis())
             )
         } else {
-            bitcoinDatabase.provideDao()?.getLastBTCPrice()?.blockingGet().apply {
+            bitcoinDatabase.provideDao().getLastBTCPrice().blockingGet().apply {
                 if (this != null) {
                     result.value = BTCModel(0, this.price, this.time)
                     setWidgetViewConfig(context, this.price, getTimeByTimeStamp(this.time))
