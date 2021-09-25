@@ -18,6 +18,7 @@ abstract class BTCPriceDao {
 
     @Query("select * from tbl_price")
     abstract fun getBTCPrice(): Maybe<List<BTCModel>>
+
     @Query("select * from tbl_price order by time DESC LIMIT 1")
     abstract fun getLastBTCPrice(): Maybe<BTCModel>
 
@@ -32,45 +33,32 @@ abstract class BTCPriceDao {
     @Query("select * from tbl_average order by id DESC LIMIT 4")
     abstract fun getLast4Average(): Maybe<List<BTCAverage>>
 
-    @Synchronized fun insertBitcoinPrice(btcModel: BTCModel){
+    @Synchronized
+    fun insertBitcoinPrice(btcModel: BTCModel) {
         insertPriceTable(btcModel).blockingGet()?.apply {
-            Log.e("addedPrice",this.toString())
+            Log.e("addedPrice", this.toString())
         }
         getBTCAverageBaseDate(getDateTime(btcModel.time)).blockingGet().apply {
-            if (this==null){
+            if (this == null) {
                 insertAverageTable(
-                    BTCAverage(0,1,btcModel.price.toDouble(),btcModel.price.toDouble(),
-                    getDateTime(btcModel.time)
-                )
+                    BTCAverage(
+                        0, 1, btcModel.price.toDouble(), btcModel.price.toDouble(),
+                        getDateTime(btcModel.time)
+                    )
                 ).blockingGet()?.apply {
-                    Log.e("added",this.toString())
+                    Log.e("added", this.toString())
                 }
-            }else{
-                var averageModel=this
+            } else {
+                var averageModel = this
                 averageModel.apply {
                     total++
-                    sum+=btcModel.price.toDouble()
-                    average = sum/total
+                    sum += btcModel.price.toDouble()
+                    average = sum / total
                 }
                 insertAverageTable(this).blockingGet().apply {
-                    Log.e("update",averageModel.average.toString())
+                    Log.e("update", averageModel.average.toString())
                 }
             }
         }
-    }
-    @Database(entities = [BTCModel::class, BTCAverage::class], version = 2, exportSchema = false)
-    abstract class BitcoinDatabase : RoomDatabase() {
-
-        abstract fun provideDao(): BTCPriceDao
-
-        companion object {
-            fun createDB(context: Context): BitcoinDatabase = Room
-                .databaseBuilder(
-                    context,
-                    BitcoinDatabase::class.java,
-                    "bitcoinDB"
-                ).fallbackToDestructiveMigration().allowMainThreadQueries().build()
-        }
-
     }
 }
