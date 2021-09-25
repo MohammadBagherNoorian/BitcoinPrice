@@ -11,25 +11,27 @@ import android.widget.RemoteViews
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.mbn.bitcoinprice.R
+import com.mbn.bitcoinprice.db.BitcoinDatabase
 import com.mbn.bitcoinprice.model.BTCModel
+import com.mbn.bitcoinprice.network.BitCoinService
 import com.mbn.bitcoinprice.view.BitcoinWidget
-import com.mbn.testwidget.repository.BitCoinRepository
+import com.mbn.bitcoinprice.repository.BitCoinRepository
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
-class BitcoinData(mcontext: Context) {
-    private val context = mcontext
+class BitcoinData @Inject constructor( val context: Context,val bitcoinDatabase: BitcoinDatabase) {
     private var result = MutableLiveData<BTCModel>()
     fun getResult(): LiveData<BTCModel> {
         return result
     }
 
     @Synchronized
-    fun fetchData() {
+    fun fetchData(bitCoinService: BitCoinService) {
         val res: MutableLiveData<Number> = MutableLiveData()
         val disposables = CompositeDisposable()
-        val repo = BitCoinRepository()
+        val repo = BitCoinRepository(bitCoinService)
         //for show Loading when in progress
         setWidgetViewConfig(
             context,
@@ -59,13 +61,13 @@ class BitcoinData(mcontext: Context) {
             val btcPrice = (1 / thousdandUsd.toDouble()) * 1000
             val btcPricesTwoDecimal = String.format("%.2f", btcPrice)
             result.value = BTCModel(0, btcPricesTwoDecimal).also {
-                App.appDataBase?.provideDao()?.insertBitcoinPrice(it)
+                bitcoinDatabase.provideDao()?.insertBitcoinPrice(it)
             }
             setWidgetViewConfig(
                 context, "$btcPricesTwoDecimal$", getTimeByTimeStamp(System.currentTimeMillis())
             )
         } else {
-            App.appDataBase?.provideDao()?.getLastBTCPrice()?.blockingGet().apply {
+            bitcoinDatabase.provideDao()?.getLastBTCPrice()?.blockingGet().apply {
                 if (this != null) {
                     result.value = BTCModel(0, this.price, this.time)
                     setWidgetViewConfig(context, this.price, getTimeByTimeStamp(this.time))
